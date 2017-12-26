@@ -2,12 +2,12 @@
 
 ## Suppliment to the article:
 
-[Single-Pass Online Statistics Algorithms] (http://www.numericalexpert.com/articles/single_pass_stat/ ), 
+[Single-Pass Online Statistics Algorithms](http://www.numericalexpert.com/articles/single_pass_stat/ ), 
 by Nikolai Shokhirev, 2013
 
 ### Author
 
-[Nikolai Shokhirev] (http)://www.numericalexpert.com/contact.php) 
+[Nikolai Shokhirev](http://www.numericalexpert.com/contact.php) 
 
 ### Dependencies
 
