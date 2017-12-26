@@ -9,6 +9,16 @@ by Nikolai Shokhirev, 2013
 
 [Nikolai Shokhirev](http://www.numericalexpert.com/contact.php) 
 
+### File structure & description
+
+    online_statatistics/
+        __init__.py
+        online_stat.py  - Defined: WindowedStat, moment()
+    doc/
+        
+    README.md
+    test_winstat.ipynb
+
 ### Dependencies
 
 numpy
@@ -43,6 +53,9 @@ Output:
     5.56666666667 2.29555555556   0.569259259259  7.90436296296
     7.96666666667 5.33555555556   3.63325925926 42.7022296296
     11.1666666667 9.38888888889   2.34259259259 132.226851852
+
+### Test \/ Demo
+
 
 
 ## License
