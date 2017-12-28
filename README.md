@@ -13,11 +13,11 @@ by Nikolai Shokhirev, 2013
 
     online_statatistics/
         __init__.py
-        online_stat.py  - Defined: WindowedStat, moment()
+        online_stat.py  - Defined: WindowedStat, CumulativeStat, moment()
     doc/
         
     README.md
-    test_winstat.ipynb
+    test_winstat.ipynb - Test/Demo
 
 ### Dependencies
 

@@ -38,8 +38,7 @@ class WindowedStat():
         
     def push(self, x):
         """
-            Update object with new data
-            x - data 
+            Update object with new data x 
         """
         m1 = self.m
         d = x - m1
@@ -63,6 +62,46 @@ class WindowedStat():
         self.m4 = self.s4/self.k
         
         
+class CumulativeStat():
+    """
+        Cumulative  statistics
+        Nikolai Shokhirev, 2017
+        see Single-Pass Online Statistics Algorithms, 2013
+        http://www.numericalexpert.com/articles/single_pass_stat/ 
+        Calculation of m (mean), and m2, m3 and m4 centered moments
+    """
+    def __init__(self):
+        self.reset()
+        
+    def reset(self):
+        """
+            Can be called to reuse existing object
+        """
+        self.s = 0.0
+        self.s2 = 0.0
+        self.s3 = 0.0
+        self.s4 = 0.0
+        self.k = 0
+        self.m = 0.0       
+        
+    def push(self, x):
+        """
+            Update object with new data x
+        """
+        m1 = self.m
+        d = x - m1
+        self.k += 1.0
+        self.s += x
+        self.s4 += d**4 - 4.0*d *(self.s3 + d**3) / self.k \
+              + 6.0*(self.s2 + d**2)*d**2 / self.k**2 - 3.0*d**4 / self.k**3
+        self.s3 += d**3 - 3.0*d*(self.s2 + d**2) / self.k + 2.0*d**3 / self.k**2
+        self.s2 += d**2*(1.0 - 1.0 / self.k)
+        self.m = self.s / self.k
+        self.m2 = self.s2/self.k
+        self.m3 = self.s3/self.k
+        self.m4 = self.s4/self.k
+
+    
 def moment(X, n, imax, p):
     '''
     Two-pass algorithm - used for testing
@@ -84,6 +123,4 @@ def moment(X, n, imax, p):
     S = np.sum((x-m)**p) 
     M = S/(h-l)
     return M
-        
-        
         
