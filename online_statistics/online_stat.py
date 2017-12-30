@@ -22,10 +22,9 @@ class WindowedStat():
             n - target window size
         """
         self.n = n
-        self.xn = np.zeros(n)
-        self.reset()
+        self.reset(n)
         
-    def reset(self):
+    def reset(self, n):
         """
             Can be called to reuse existing object
         """
@@ -35,6 +34,7 @@ class WindowedStat():
         self.s4 = 0.0
         self.k = 0
         self.m = 0.0       
+        self.xn = np.zeros(n)
         
     def push(self, x):
         """
@@ -102,25 +102,101 @@ class CumulativeStat():
         self.m4 = self.s4/self.k
 
     
-def moment(X, n, imax, p):
-    '''
-    Two-pass algorithm - used for testing
-    X - data array
-    n - target window
-    imax - the highest index
-    p - power
-    if p == 1: 
-        S - sum of last n available x terms
-        M - mean of last n available terms
-    if p > 1:
-        S - sum of last n available (x-mean)**p
-        M - central p-moment of last n available terms
-    '''
-    l = max(0, imax-n+1)
-    h = min(imax+1,len(X))
-    x = X[l:h]
-    m = x.mean() if p > 1 else 0.0
-    S = np.sum((x-m)**p) 
-    M = S/(h-l)
-    return M
+class WindowedCovariance():
+    """
+        Running windowed covariance
+        Nikolai Shokhirev, 2017
+        see Single-Pass Online Statistics Algorithms, 2013
+        http://www.numericalexpert.com/articles/single_pass_stat/ 
+        Calculation of m (mean), and m2, m3 and m4 centered moments
+    """
+
+    def __init__(self,n):
+        """
+            n - target window size
+        """
+        self.n = n
+        self.reset(n)
         
+    def reset(self, n):
+        """
+            Can be called to reuse existing object
+        """
+        self.sx = 0.0
+        self.sy = 0.0
+        self.sxy = 0.0
+        self.k = 0
+        self.xn = np.zeros(n)
+        self.yn = np.zeros(n)
+        self.mx = 0.0
+        self.my = 0.0
+        
+    def push(self, x, y):
+        """
+            Update object with new data x 
+        """        
+        mx1 = self.mx
+        my1 = self.my
+        dx = x - mx1
+        dy = y - my1
+        if self.k < self.n:
+            self.k += 1.0
+            self.sx += x
+            self.sy += y
+            dxn = 0.0
+            dyn = 0.0
+        else:
+            self.sx += x - self.xn[0]
+            dxn = self.xn[0] - mx1 
+            self.sy += y - self.yn[0]
+            dyn = self.yn[0] - my1 
+        self.sxy += dx*dy - dxn*dyn - (dx - dxn)*(dy - dyn)/self.k
+        self.xn = np.roll(self.xn,-1)
+        self.yn = np.roll(self.yn,-1)
+        self.xn[-1] = x
+        self.yn[-1] = y
+        self.mx = self.sx/self.k
+        self.my = self.sy/self.k
+        self.cov = self.sxy/self.k
+        
+class CumulativeCovariance():
+    """
+        Running windowed covariance
+        Nikolai Shokhirev, 2017
+        see Single-Pass Online Statistics Algorithms, 2013
+        http://www.numericalexpert.com/articles/single_pass_stat/ 
+        Calculation of m (mean), and m2, m3 and m4 centered moments
+    """
+
+    def __init__(self):
+        """
+            n - target window size
+        """
+        self.reset()
+        
+    def reset(self):
+        """
+            Can be called to reuse existing object
+        """
+        self.sx = 0.0
+        self.sy = 0.0
+        self.sxy = 0.0
+        self.k = 0
+        self.mx = 0.0
+        self.my = 0.0
+        
+    def push(self, x, y):
+        """
+            Update object with new data x 
+        """        
+        mx1 = self.mx
+        my1 = self.my
+        dx = x - mx1
+        dy = y - my1
+        self.k += 1.0
+        self.sx += x
+        self.sy += y
+        self.sxy += dx*dy - dx*dy/self.k
+        self.mx = self.sx/self.k
+        self.my = self.sy/self.k
+        self.cov = self.sxy/self.k
