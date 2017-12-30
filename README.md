@@ -14,6 +14,8 @@ by Nikolai Shokhirev, 2013
     online_statatistics/
         __init__.py
         online_stat.py - Defined: WindowedStat, CumulativeStat, WindowedCovariance, CumulativeCovariance
+    test/
+        __init__.py
         test_utils.py - Defined: win_moment, cum_moment, win_cov, cum_cov
     doc/
         online_statistics.html - Generated from notebook: all classes, functions and tests.
