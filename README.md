@@ -13,15 +13,46 @@ by Nikolai Shokhirev, 2013
 
     online_statatistics/
         __init__.py
-        online_stat.py  - Defined: WindowedStat, CumulativeStat, moment()
+        online_stat.py - Defined: WindowedStat, CumulativeStat, WindowedCovariance, CumulativeCovariance
+        test_utils.py - Defined: win_moment, cum_moment, win_cov, cum_cov
     doc/
         
     README.md
-    test_winstat.ipynb - Test/Demo
+    test_online_stat.ipynb - Test/Demo
 
 ### Dependencies
 
 numpy
+
+### API
+
+    WindowedStat
+        rest(n) - can be called to reuse existing object.
+        s - sum
+        s2 - central 2-nd order sum
+        s3 - central 3-rd order sum
+        s4 - central 4-th order sum
+        m - mean
+        m2 - central 2-nd order moment
+        m3 - central 3-rd order moment
+        m4 - central 4-th order moment
+        
+    CumulativeStat
+        rest() - can be called to reuse existing object.
+        Same as above.
+        
+    WindowedCovariance
+        rest(n) - can be called to reuse existing object.
+        sx - x-sum
+        sy - y-sum
+        sxy - xy-sum
+        mx - x-mean
+        my - y-mean
+        cov - covarianxe
+        
+    CumulativeCovariance
+        rest() - can be called to reuse existing object.
+        Same as above.
 
 ### Usage example
 
@@ -54,9 +85,13 @@ Output:
     7.96666666667 5.33555555556   3.63325925926 42.7022296296
     11.1666666667 9.38888888889   2.34259259259 132.226851852
 
+    cs = CumulativeStat()
+    
+    sSimilar with the other objects.
+
 ### Test \/ Demo
 
-test_winstat.ipynb
+test_online_stat.ipynb
 
 ## License
 
